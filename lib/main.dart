@@ -17,14 +17,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Personal Expenses',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
+        colorScheme: ColorScheme.fromSwatch()
+            .copyWith(primary: Colors.blue, secondary: Colors.amber),
         textTheme: ThemeData.light().textTheme.copyWith(
               titleMedium: const TextStyle(
                   fontFamily: 'Quicksand',
                   fontSize: 18,
                   fontWeight: FontWeight.bold),
             ),
-        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.blue),
+        errorColor: Colors.red,
       ),
       home: const MyHomePage(),
     );
@@ -39,25 +40,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _userTransactions = [
-    // Transaction(
-    //     id: 't1', title: 'New Shoes', amount: 69.99, date: DateTime.now()),
-    // Transaction(
-    //     id: 't2',
-    //     title: 'Weekly Groceries',
-    //     amount: 16.53,
-    //     date: DateTime.now()),
-    // Transaction(
-    //     id: 't3', title: 'Ao that dei', amount: 19.32, date: DateTime.now())
-  ];
+  final List<Transaction> _userTransactions = [];
 
-  // List<Transaction> get _recentTransactions {
-  //   return _userTransactions.where((tx) {
-  //     return tx.date.isAfter(DateTime.now().subtract(
-  //       Duration(days: 7),
-  //     ));
-  //   });
-  // }
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((tx) {
       return tx.date.isAfter(
@@ -68,12 +52,13 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(String txTitle, double txAmount) {
+  void _addNewTransaction(
+      String txTitle, double txAmount, DateTime chosenDate) {
     final newTx = Transaction(
         id: DateTime.now().toString(),
         title: txTitle,
         amount: txAmount,
-        date: DateTime.now());
+        date: chosenDate);
 
     setState(() {
       _userTransactions.add(newTx);
@@ -89,6 +74,12 @@ class _MyHomePageState extends State<MyHomePage> {
         return NewTransaction(_addNewTransaction);
       },
     );
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((element) => element.id == id);
+    });
   }
 
   @override
@@ -108,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Chart(_recentTransactions),
-            TransactionList(_userTransactions)
+            TransactionList(_userTransactions, _deleteTransaction)
           ],
         ),
       ),
