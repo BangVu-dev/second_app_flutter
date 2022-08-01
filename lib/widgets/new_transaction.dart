@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class NewTransaction extends StatefulWidget {
   final Function addNewTransaction;
 
-  NewTransaction(this.addNewTransaction, {Key? key}) : super(key: key);
+  const NewTransaction(this.addNewTransaction, {Key? key}) : super(key: key);
 
   @override
   State<NewTransaction> createState() => _NewTransactionState();
@@ -45,11 +45,25 @@ class _NewTransactionState extends State<NewTransaction> {
               keyboardType: TextInputType.number,
               onFieldSubmitted: (_) => submitData(),
             ),
+            Row(
+              children: [
+                const Text('No Date Chosen!'),
+                TextButton(
+                    style: TextButton.styleFrom(
+                        primary: Theme.of(context).primaryColor),
+                    onPressed: () {},
+                    child: const Text(
+                      'Choose Date',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ))
+              ],
+            ),
             TextButton(
                 onPressed: submitData,
-                child: Text('Add Transaction'),
-                style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all(Colors.purple))),
+                style: TextButton.styleFrom(
+                  textStyle: TextStyle(color: Colors.white),
+                ),
+                child: const Text('Add Transaction')),
           ],
         ),
       ),

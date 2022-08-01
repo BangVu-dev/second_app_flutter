@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:second_project/widgets/new_transaction.dart';
 
+import './widgets/new_transaction.dart';
 import 'model/transaction.dart';
 import './widgets/transaction_list.dart';
+import './widgets/chart.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,11 +19,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple,
         textTheme: ThemeData.light().textTheme.copyWith(
-            titleMedium: const TextStyle(
-                fontFamily: 'OpenSans',
-                fontSize: 18,
-                fontWeight: FontWeight.bold)),
-        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.amber),
+              titleMedium: const TextStyle(
+                  fontFamily: 'Quicksand',
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
+        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.blue),
       ),
       home: const MyHomePage(),
     );
@@ -48,6 +50,23 @@ class _MyHomePageState extends State<MyHomePage> {
     // Transaction(
     //     id: 't3', title: 'Ao that dei', amount: 19.32, date: DateTime.now())
   ];
+
+  // List<Transaction> get _recentTransactions {
+  //   return _userTransactions.where((tx) {
+  //     return tx.date.isAfter(DateTime.now().subtract(
+  //       Duration(days: 7),
+  //     ));
+  //   });
+  // }
+  List<Transaction> get _recentTransactions {
+    return _userTransactions.where((tx) {
+      return tx.date.isAfter(
+        DateTime.now().subtract(
+          const Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
 
   void _addNewTransaction(String txTitle, double txAmount) {
     final newTx = Transaction(
@@ -87,15 +106,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: const Card(
-                color: Colors.blue,
-                elevation: 5,
-                child: Text('CHART!'),
-              ),
-            ),
+          children: [
+            Chart(_recentTransactions),
             TransactionList(_userTransactions)
           ],
         ),
